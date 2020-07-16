@@ -10,10 +10,8 @@ import unicodecsv as csv
 from datetime import date
 from webdriver_manager.chrome import ChromeDriverManager
 
-driver = webdriver.Chrome(ChromeDriverManager().install())
-
-driver.get('https://extra.bet365.com/promotions/special-offers');
-
+driver = webdriver.Chrome(ChromeDriverManager().install()) #Gets the latest Chrome Driver
+driver.get('https://extra.bet365.com/promotions/special-offers')
 myurl = 'https://extra.bet365.com/promotions/special-offers'
 
 uClient = req(myurl)
@@ -21,6 +19,7 @@ page_html = uClient.read()
 uClient.close()
 pagebs = bs(page_html,'html.parser')
 
+#Build lists to store each parameter scraped
 items=list()
 urls = list()
 titlel = list()
@@ -36,12 +35,13 @@ for el in navigationn:
 
 time.sleep(1)
 
+#Create a CSV file locally where you will save the results
 filename='results/scroutcome/bet365.csv'
 f=open(filename,'w')
 headers='company,date,title,s-description,url\n'
-#headers='company,title,s-description,l-description,url\n'
 f.write(headers)
 
+#Loop through the elements you are interested and get the data you need
 for x in items:
     urla = str(x)
     driver.get(urla);
@@ -77,15 +77,14 @@ for x in items:
                 urls.append(onel)
                 print(onel)
 
-
 i=0
 run=len(titlel)
 
 today = date.today()
 d1 = today.strftime("%d/%m/%Y")
 
+#Save data scraped in the CSV)
 while i < run:
-    #f.write('Bet365'+ ',' + titlel[i] + ',' + descvl[i] + ',' + ldescvl[i] + ',' + urls[i] + '\n')
     f.write('Bet365'+ ',' + d1 + ',' + titlel[i] + ',' + descvl[i] + ',' + urls[i] + '\n')
     i=i+1
 
