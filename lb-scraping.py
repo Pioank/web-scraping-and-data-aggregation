@@ -10,17 +10,11 @@ import unicodecsv as csv
 from datetime import date
 from webdriver_manager.chrome import ChromeDriverManager
 
-driver = webdriver.Chrome(ChromeDriverManager().install())
-driver.get('https://sports.ladbrokes.com/promotions/all');
-
-#myurl = 'https://sports.ladbrokes.com/promotions/all'
-#uClient = req(myurl)
-#page_html = uClient.read()
-#uClient.close()
-#pagebs = bs(page_html,'html.parser')
-
+driver = webdriver.Chrome(ChromeDriverManager().install()) #Installs the latest version of Chrome driver
+driver.get('https://sports.ladbrokes.com/promotions/all')
 time.sleep(2)
 
+# Create lists to store your data
 urls=list()
 ldescription5=list()
 ldescription=list()
@@ -29,10 +23,17 @@ sdescriptionl=list()
 i=0
 x=0
 
+# Create CSV to store your data
+filename='results/scroutcome/ladbrokes.csv'
+f=open(filename,'w')
+headers='company,date,title,s-description,url\n'
+f.write(headers)
 
+# Find elements from which you want to get data  
 promotions = driver.find_elements_by_class_name("promotion-item")
 print(len(promotions))
 
+#Loop through the elements found and store the data points interested to in the lists
 for promotion in promotions:
     title=promotion.find_element_by_tag_name('h3').text
     titlel.append(title)
@@ -43,7 +44,6 @@ for promotion in promotions:
     url=url2.get_attribute('href')
     urls.append(url)
     print(url)
-
 
 for u in urls:
     urlclick = u
@@ -69,23 +69,13 @@ for u in urls:
     ldescription6=''.join(ldescription5)
     ldescription.append(ldescription6)
 
-
 today = date.today()
 d1 = today.strftime("%d/%m/%Y")
 
 run=len(urls)
 
-filename='results/scroutcome/ladbrokes.csv'
-f=open(filename,'w')
-
-headers='company,date,title,s-description,url\n'
-#headers='company,code,title,description,url\n'
-f.write(headers)
-
 while i < run:
-    f.write('Ladbrokes' + ',' + d1 + ',' + titlel[i] + ',' + sdescriptionl[i] + ',' + urls[i] + '\n')
-    #f.write('Ladbrokes' + ',' + v1[i] + ',' + v2[i] + ',' + v3[i] + '\n')
+    f.write('Ladbrokes' + ',' + d1 + ',' + titlel[i] + ',' + sdescriptionl[i] + ',' + urls[i] + '\n') # Save data in the CSV
     i=i+1
-
 
 driver.quit()
